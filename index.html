@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css" />
+  <title>Document</title>
+</head>
+<body>
+
+  <div id="container" style="width: 1500px; height: 450px"></div>
+
+  <div class="total">
+    <span class="total-text">Итог:</span>
+    <span class="total-check">0 руб</span>
+  </div>
+
+  <!-- <div class="catecory__text">категория</div> -->
+
+  <div class="dropdown">
+    <button class="btn">
+      категория
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a class="pointer__btn" id="bc__blue" href="#">Обязательные 
+        <div class="bc__window bc__blue"></div>
+      </a>
+      <a class="pointer__btn" id="bc__purple" href="#">Автомобиль
+        <div class="bc__window bc__purple"></div>
+      </a>
+      <a class="pointer__btn" id="bc__pink" href="#">Дом
+        <div class="bc__window bc__pink"></div>
+      </a>
+      <a class="pointer__btn" id="bc__azure" href="#">Семья
+        <div class="bc__window bc__azure"></div>
+      </a>
+      <a class="pointer__btn" id="bc__violet" href="#">Другое
+        <div class="bc__window bc__violet"></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="new__tracker">
+
+
+    <div class="wave-group">
+      <input required="" type="text" class="input" maxlength="42">
+      <span class="bar"></span>
+      <label class="label">
+        <span class="label-char" style="--index: 0">о</span>
+        <span class="label-char" style="--index: 1">п</span>
+        <span class="label-char" style="--index: 2">и</span>
+        <span class="label-char" style="--index: 3">с</span>
+        <span class="label-char" style="--index: 4">а</span>
+        <span class="label-char" style="--index: 5">н</span>
+        <span class="label-char" style="--index: 6">и</span>
+        <span class="label-char" style="--index: 7">е</span>
+      </label>
+    </div>
+
+    <div class="wave-group__money">
+      <input required="" type="number" class="input__money">
+      <span class="bar__money"></span>
+      <label class="label__money">
+        <span class="label-char__money" style="--index: 0">с</span>
+        <span class="label-char__money" style="--index: 1">у</span>
+        <span class="label-char__money" style="--index: 2">м</span>
+        <span class="label-char__money" style="--index: 3">м</span>
+        <span class="label-char__money" style="--index: 4">а</span>
+      </label>
+    </div>
+
+    <div class="button">
+      <span class="lable__button">Добавить</span>
+    </div>
+
+    <div class="button delete">
+      <span class="delete__all">Удалить все</span>
+    </div>
+
+    <div id="success" class="alert alert-success none" role="alert">
+      <span class="alert__icon">😀👍</span>
+      <span class="alert__text">Добавлено!</span>
+    </div>
+
+    <div id="error" class="alert alert-danger none" role="alert">
+      <span class="alert__icon">😟</span>
+      <span class="alert__text">Что-то пошло не так.</span>
+    </div>
+  </div>
+
+  <ul class="dir__item">
+  </ul>
+
+</body>
+
+<script src="https://cdn.anychart.com/releases/8.12.0/js/anychart-base.min.js"></script>
+<script src="main.js"></script>
+<script type="module" src="diagramma.js"></script>
+</html>
