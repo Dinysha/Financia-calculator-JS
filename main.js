@@ -1,27 +1,3 @@
-// TODO:
-// [+] добавить инпут с деньгами
-// [+] добавить кнопку отправки инпута
-// [+] слушание записи в инпут / передача в консоль
-// [+] добавить проверку заполнения инпутов
-// [+] добавить проверку заполнения "сумма" как число
-// [+] добавить тотал счет
-// [+] придумать как обработать результат, сделать так, чтобы при клиле менялся класс, если произогла ошибка
-// [+] обработка значение, ошибка при неверной записи
-// [+] сумма в тотал
-// [+] удаление при нажатии на плашку
-// [+] добавления плашки с темой и расходом
-// [+] реализовать четкие категории по которым будет распределяться бюджет
-// [+] разобраться откуда в первом инпуте появляется буква О
-// [+] менять цвет кнопки с категориями
-// [+] сделать ограничение вводу текста в описание
-// [+] добавление кнопки удаления всех элементов
-// [+] удаление из тотала
-// [+] добавление в массив и удаление из него
-// [+] разобраться с тоталом после удаления всего
-// [+] удаление из категории 
-// [+] добавление темы и суммы в диаграмму
-// [] добавление в локалсторедж
-
 const btn = document.querySelector(".button");
 const inpName = document.querySelector(".input");
 const inpSum = document.querySelector(".input__money");
@@ -33,11 +9,55 @@ const btnColor = document.querySelector(".btn");
 const btnContent = document.querySelector(".dropdown-content");
 const btnDeleteAll = document.querySelector(".delete");
 
-const arrayMoney = [];
+let arrayMoney = [];
 
-if(localStorage.getItem('array')){
-  console.log(JSON.parse(localStorage.getItem("array")));
-}
+let totalSum = 0
+
+//значения для каждой категории
+let categoryValues = {
+  required: 0,
+  car: 0,
+  home: 0,
+  family: 0,
+  other: 0,
+};
+
+// сохранение в localStorage
+const saveDataToLocalStorage = function () {
+  localStorage.setItem('arrayMoney', JSON.stringify(arrayMoney));
+  localStorage.setItem('totalSum', totalSum);
+  localStorage.setItem('categoryValues', JSON.stringify(categoryValues));
+};
+
+// отрисовка на странице из localstorage
+const loadDataFromLocalStorage = function () {
+  const savedArrayMoney = localStorage.getItem('arrayMoney');
+  const savedTotalSum = localStorage.getItem('totalSum');
+  const savedCategoryValues = localStorage.getItem('categoryValues');
+
+  if (savedArrayMoney) {
+    arrayMoney = JSON.parse(savedArrayMoney);
+
+      for (let i = 0; i < arrayMoney.length; i++) {
+    item.innerHTML += `
+      <li class="list" data-action="delete">
+        <p class="text">${arrayMoney[i].text}</p>
+        <p class="number">${arrayMoney[i].money} руб</p>
+        <div class="bc__window ${arrayMoney[i].color}"></div>
+      </li>`;
+  }
+  }
+
+  if (savedTotalSum) {
+    totalSum = parseFloat(savedTotalSum);
+  }
+
+  if (savedCategoryValues) {
+    categoryValues = JSON.parse(savedCategoryValues);
+  }
+};
+
+loadDataFromLocalStorage();
 
 //проверка пустой строки
 btn.onclick = function () {
@@ -48,7 +68,9 @@ btn.onclick = function () {
     addValueCategories();
     result(danger, success);
     updateChart();
-    saveToLocalStorage();
+    saveDataToLocalStorage();
+    updateTotal();
+
 
     //очищаем поле ввода
     inpName.value = "";
@@ -81,7 +103,6 @@ const arr = function () {
     money: inpSum.value,
     color: colorizeButton,
   });
-  console.log(arrayMoney);
 };
 
 //удаление из массива
@@ -91,13 +112,10 @@ const deleteItem = function (index) {
 };
 
 //заполнение тотал
-let totalSum = 0;
 const totalCheack = function () {
   totalSum = Number(totalSum) + Number(inpSum.value);
   return totalSum + " руб";
 };
-
-console.log(arrayMoney)
 
 //заполнение плашек
 const addItem = function () {
@@ -111,14 +129,12 @@ const addItem = function () {
 };
 
 //обновления тотала
-const updateTotal = function () {
+  function updateTotal()  {
   let newTotal = 0;
   for (let i = 0; i < arrayMoney.length; i++) {
     newTotal += Number(arrayMoney[i].money);
   }
   total.innerHTML = newTotal + " руб";
-  console.log(total);
-  console.log(newTotal);
 };
 
 //удаление плашек
@@ -134,7 +150,8 @@ document.querySelector("ul").onclick = function (e) {
   deleteItem(index);
   updateTotal();
   updateChart();
-  saveToLocalStorage();
+  // saveToLocalStorage();
+  saveDataToLocalStorage();
 };
 
 //распределение по категориям
@@ -144,18 +161,8 @@ btnContent.addEventListener("click", function (e) {
   (colorizeButton = e.target.id), btnColor.classList.add(colorizeButton);
 });
 
-//значения для каждой категории
-let categoryValues = {
-  required: 0,
-  car: 0,
-  home: 0,
-  family: 0,
-  other: 0,
-};
-
 //удаление из объекта
 const removeValueFromCategory = function (item) {
-  console.log("Removing value from category");
   const color = item.color;
   const value = Number(item.money);
   if (color === "bc__blue") {
@@ -169,8 +176,6 @@ const removeValueFromCategory = function (item) {
   } else if (color === "bc__violet") {
     categoryValues.other -= value;
   }
-  console.log(`Removed ${value} from ${color} category`);
-  console.log(categoryValues);
 };
 
 
@@ -178,7 +183,6 @@ const removeValueFromCategory = function (item) {
 const addValueCategories = function () {
   if (colorizeButton === "bc__blue") {
     categoryValues.required += Number(inpSum.value);
-    console.log(categoryValues.required)
   }
   if (colorizeButton === "bc__purple") {
     categoryValues.car += Number(inpSum.value);
@@ -192,7 +196,6 @@ const addValueCategories = function () {
   if (colorizeButton === "bc__violet") {
     categoryValues.other += Number(inpSum.value);
   }
-  console.log(categoryValues);
 };
 
 //удаление всего
@@ -212,7 +215,7 @@ btnDeleteAll.addEventListener("click", function () {
     other: 0,
   };
   updateChart();
-  saveToLocalStorage();
+  saveDataToLocalStorage();
 });
 
 //сохранение в localStorage
