@@ -49,7 +49,7 @@ const loadDataFromLocalStorage = function () {
   }
 
   if (savedTotalSum) {
-    totalSum = parseFloat(savedTotalSum);
+    total.innerHTML = parseFloat(savedTotalSum);
   }
 
   if (savedCategoryValues) {
